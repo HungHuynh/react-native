@@ -7,6 +7,8 @@
 
 package com.facebook.react.modules.websocket;
 
+import com.facebook.react.modules.network.*;
+
 import com.facebook.common.logging.FLog;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -84,11 +86,17 @@ public final class WebSocketModule extends ReactContextBaseJavaModule {
     @Nullable final ReadableArray protocols,
     @Nullable final ReadableMap options,
     final int id) {
-    OkHttpClient client = new OkHttpClient.Builder()
-      .connectTimeout(10, TimeUnit.SECONDS)
-      .writeTimeout(10, TimeUnit.SECONDS)
-      .readTimeout(0, TimeUnit.MINUTES) // Disable timeouts for read
-      .build();
+//     OkHttpClient client = new OkHttpClient.Builder()
+//       .connectTimeout(10, TimeUnit.SECONDS)
+//       .writeTimeout(10, TimeUnit.SECONDS)
+//       .readTimeout(0, TimeUnit.MINUTES) // Disable timeouts for read
+//       .build();
+    
+    OkHttpClient client = OkHttpClientProvider.enableTls12OnPreLollipop(new OkHttpClient.Builder())
+        .connectTimeout(10, TimeUnit.SECONDS)
+        .writeTimeout(10, TimeUnit.SECONDS)
+        .readTimeout(0, TimeUnit.MINUTES)
+        .build();
 
     Request.Builder builder = new Request.Builder().tag(id).url(url);
 
